@@ -1,0 +1,50 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Imprimir</title>
+
+    <!-- Normalize or reset CSS with your favorite library -->
+    <link rel="stylesheet" href="css/normalize.min.css">
+
+    <!-- Load paper.css for happy printing -->
+    <link rel="stylesheet" href="css/cssPrinter.css">
+
+    <!-- Set page size here: A5, A4 or A3 -->
+    <!-- Set also "landscape" if you need -->
+    <style>
+        @page {
+            size: A3 landscape
+        }
+    </style>
+</head>
+
+<!-- Set "A5", "A4" or "A3" for class name -->
+<!-- Set also "landscape" if you need -->
+
+<body class="A3 landscape">
+    <div id='printerMenu' class='no-print'><a onclick="print()">Imprimir</a></div>
+    <!-- Each sheet element should have the class "sheet" -->
+    <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
+    <section class="sheet padding-10mm">
+
+        <!-- Write HTML just like a web page -->
+        <article id=page>This is an A3 document (landscape).</article>
+        <section id='timePrinter' style="display:none"></section>
+    </section>
+
+
+
+</body>
+<script>
+    const {
+        print
+    } = require(`${__dirname}/printer.js`)
+    const {
+        webFrame
+    } = require('electron')
+    webFrame.setZoomFactor(0.5)
+</script>
+
+
+</html>
