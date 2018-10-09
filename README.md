@@ -1,4 +1,5 @@
 # electronPrinter!
+https://www.npmjs.com/package/electronsimpleprinter
 ## use
 
     const { createPrintWindow } =  require('electronPrinter') 
