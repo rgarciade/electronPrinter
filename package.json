@@ -1,8 +1,8 @@
 {
-  "name": "electronprinter",
-  "version": "1.0.0",
-  "description": "printer",
-  "main": "index.js",
-  "author": "",
-  "license": "ISC"
+    "name": "electronsimpleprinter",
+    "version": "1.0.0",
+    "description": "printer",
+    "main": "index.js",
+    "author": "",
+    "license": "ISC"
 }
