@@ -36,7 +36,6 @@ const createPrintWindow = (args) => {
     })
 
     printWindow.loadFile(`${__dirname}/printer.html`)
-    printWindow.webContents.openDevTools()
     printWindow.on('closed', () => {
         printWindow = null
     })

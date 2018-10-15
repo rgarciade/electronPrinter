@@ -1,6 +1,6 @@
 {
   "name": "electronsimpleprinter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "printer",
   "main": "index.js",
   "author": "rgarciade"
