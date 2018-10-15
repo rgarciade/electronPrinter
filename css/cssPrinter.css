@@ -9,7 +9,7 @@ body {
 .sheet {
     margin: 0;
     overflow: hidden;
-    position: relative;
+   /* position: relative;*/
     box-sizing: border-box;
     page-break-after: always;
 }
@@ -19,37 +19,44 @@ body {
 
 body.A3 .sheet {
     width: 297mm;
-    height: 419mm
+    min-height: 419mm;
+    height: max-content;
 }
 
 body.A3.landscape .sheet {
     width: 420mm;
+    min-height: 297mm;
     height: max-content;
 }
 
 body.A4 .sheet {
     width: 210mm;
-    height: 296mm
+    min-height: 296mm;
+    height: max-content;
 }
 
 body.A4.landscape .sheet {
     width: 297mm;
-    height: 209mm
+    min-height: 209mm;
+    height: max-content;
 }
 
 body.A5 .sheet {
     width: 148mm;
-    height: 209mm
+    min-height: 209mm;
+    height: max-content;
 }
 
 body.A5.landscape .sheet {
     width: 210mm;
-    height: 147mm
+    min-height: 147mm;
+    height: max-content;
 }
 
 body.letter .sheet {
     width: 216mm;
-    height: 279mm
+    min-height: 279mm;
+    
 }
 
 body.letter.landscape .sheet {
@@ -94,6 +101,7 @@ body.legal.landscape .sheet {
     body {
         background: #e0e0e0
     }
+
     .sheet {
         background: white;
         box-shadow: 0 .5mm 2mm rgba(0, 0, 0, .3);
@@ -105,9 +113,11 @@ body.legal.landscape .sheet {
 /** Fix for Chrome issue #273306 **/
 
 @media print {
+
     #printerMenu {
         display: none
     }
+
     body.A3.landscape {
         width: 420mm
     }
@@ -134,17 +144,14 @@ body.legal.landscape .sheet {
     }
 }
 
-#timePrinter {
-    position: absolute;
-    top: 8px;
-    font-size: 10px;
-    left: 3%;
-    top: 0.7%;
-}
+
 
 #printerMenu {
     cursor: pointer;
-    margin-left: 19px;
-    margin-top: 13px;
-    font-size: 31px;
+    font-size: 30px;
+}
+#timePrinter {
+    margin-top: -20px;
+    font-size: 10px;
+
 }

@@ -31,12 +31,12 @@ const createPrintWindow = (args) => {
             printWindow.show()
         }
     })
-    ipcMain.on('print-init', async(event, args) => {
+    ipcMain.on('print-init', async (event, args) => {
         print(printWindow, args.close)
     })
 
     printWindow.loadFile(`${__dirname}/printer.html`)
-
+    printWindow.webContents.openDevTools()
     printWindow.on('closed', () => {
         printWindow = null
     })
