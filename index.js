@@ -40,7 +40,6 @@ const createPrintWindow = (args) => {
         printWindow = null
     })
 
-
 }
 
 function print(printWindow, close) {
