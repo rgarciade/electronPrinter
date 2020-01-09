@@ -13,7 +13,7 @@ const createPrintWindow = (args) => {
         width: 820,
         minWidth: 400
     }
-    if (hidden /*|| thermalprinter*/) {
+    if (hidden || thermalprinter) {
         windowProps.show = false
     }
     if (args.mainWindow) {
@@ -65,42 +65,47 @@ function print(printWindow, close) {
     if(deviceName != '') options.deviceName = deviceName
     printWindow.webContents.print(options, (success, errorType) => {
       if (!success) console.log(errorType)
+      if (close) printWindow.close()
     })
-    /*
-    printWindow.webContents.print({
-        printBackground: true,
-        printSelectionOnly: true,
-    }, () => {
-        if (close) printWindow.close()
-    })*/
 }
 /**
  * 
- * @param {*} principalTitle 
- * @param {*} secundaryTitle 
- * @param {*} date 
  * @param {
- *  [
+ *  imgUrl,
+ *  initial,
+ *  final,
+ *  articles:'[
  *      'quantity'
  *      'product'
  *      'price'
- *  ]
- * } products 
- * @param {*} finalText
- * @param {*} imgUrl
+ *  ]',
+ * } principalTitle 
  */
-const createTicket = (principalTitle, secundaryTitle, date, products, finalText, imgUrl) =>{
-    let ticket = '';
-    let img ='';
-    if(imgUrl){
-        img =`<img src="${imgUrl}" alt="Logotipo">`
+const createTicket = (args) =>{
+    let ticket = ''
+    let img =''
+    let initalTexts = ''
+    let finalTexts  = ''
+    if(args.imgUrl){
+        img =`<img src="${args.imgUrl}" alt="Logotipo">`
+    }
+    if(args.initial){
+        for (let index = 0; index < args.initial.length; index++) {
+            const element = args.initial[index];
+            initalTexts += `<br>${element}`
+        }
+    }
+    if(args.final){
+        for (let index = 0; index < args.final.length; index++) {
+                const element = args.final[index];
+                finalTexts += `<br>${element}`
+        }
     }
     ticket +=`
         <div class="ticket">
             ${img}
-            <p class="centrado">${principalTitle}
-                <br>${secundaryTitle}
-                <br>${date}</p>
+            <p class="centrado">
+                ${initalTexts}
             <table>
                 <thead>
                     <tr>
@@ -111,11 +116,11 @@ const createTicket = (principalTitle, secundaryTitle, date, products, finalText,
                     </tr>
                 </thead>
                 <tbody>
-                    ${createProducts(products)}
+                    ${createProducts(args.articles)}
                 </tbody>
             </table>
             <p class="centrado" style="">
-                ${finalText}
+                ${finalTexts}
             </p>
             <p style="padding-top: 8em">.</p>
         </div> `
@@ -125,17 +130,19 @@ const createProducts = (products) =>{
 
     let productsHtml = ''
     let totalPrice = 0
-    for (let index = 0; index < products.length; index++) {
-        const element = products[index];
-        totalPrice += element.price
-        productsHtml += `
-            <tr>
-                <td class="cantidad">${element.quantity}</td>
-                <td class="producto">${element.product}</td>
-                <td class="precio">${element.price}</td>
-                <td class="precio">${element.price * element.quantity}</td>
-            </tr>
-        `
+    if(products){
+        for (let index = 0; index < products.length; index++) {
+            const element = products[index];
+            totalPrice += element.price
+            productsHtml += `
+                <tr>
+                    <td class="cantidad">${element.quantity}</td>
+                    <td class="producto">${element.product}</td>
+                    <td class="precio">${element.price}</td>
+                    <td class="precio">${element.price * element.quantity}</td>
+                </tr>
+            `
+        }
     }
 
     productsHtml += `
