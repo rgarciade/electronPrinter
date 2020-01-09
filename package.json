@@ -3,5 +3,8 @@
   "version": "1.0.4",
   "description": "printer",
   "main": "index.js",
-  "author": "rgarciade"
+  "author": "rgarciade",
+  "dependencies": {
+    "moment": "^2.24.0"
+  }
 }
