@@ -1,10 +1,15 @@
 {
-  "name": "electronsimpleprinter",
-  "version": "1.1.2",
+  "name": "simple-electron-printer-and-thermalprinter",
+  "version": "1.0.1",
   "description": "printer",
   "main": "index.js",
   "author": "rgarciade",
+  "homepage": "https://github.com/rgarciade/electronsimpleprinter",
+  "bugs": {
+    "url": "https://github.com/rgarciade/electronsimpleprinter/issues"
+  },
   "dependencies": {
     "moment": "^2.24.0"
-  }
+  },
+  "keywords": ["electron","printer","thermalprinter","print"]
 }
