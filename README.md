@@ -2,7 +2,7 @@
     added template for a ticket printer
 ## use
 
-    const { createPrintWindow } =  require('electronPrinter') 
+    const { createPrintWindow } =  require('simple-electron-printer-and-thermalprinter') 
 
 
     createPrintWindow({
@@ -19,6 +19,7 @@
     
     })
 ## thermalprinter Use
+    const { createPrintWindow } =  require('simple-electron-printer-and-thermalprinter') 
 
     createPrintWindow({
 
