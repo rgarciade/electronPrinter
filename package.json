@@ -1,6 +1,6 @@
 {
   "name": "simple-electron-printer-and-thermalprinter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "printer",
   "main": "index.js",
   "author": "rgarciade",

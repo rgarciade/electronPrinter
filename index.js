@@ -133,7 +133,7 @@ const createProducts = (products) =>{
     if(products){
         for (let index = 0; index < products.length; index++) {
             const element = products[index];
-            totalPrice += element.price
+            totalPrice += element.price * element.quantity
             productsHtml += `
                 <tr>
                     <td class="cantidad">${element.quantity}</td>
