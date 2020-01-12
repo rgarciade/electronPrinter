@@ -29,7 +29,7 @@ const createPrintWindow = (args) => {
     printWindow.setMenu(null);
     printWindow.webContents.once('dom-ready', () => {
         //printWindow.webContents.openDevTools();
-        printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, config: args.config });
+        printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, sheetSize:args.sheetSize, config: args.config });
 
         if (!hidden && !thermalprinter) {
             printWindow.show()

@@ -18,6 +18,13 @@ ipcRenderer.on('chargeHtml', (event, args) => {
         addCStylesUrl(args.cssUrl)
     }
     addHtmlToBody(args.html)
+    if(args.sheetSize && ['A4','A3','A5'].includes(args.sheetSize)){
+        document.getElementsByTagName('body')[0].className = `${args.sheetSize} ${localStorage.getItem('landscape')}`
+        localStorage.setItem('PageType', args.sheetSize);
+    }else{
+        localStorage.setItem('PageType', 'A4');
+    }
+    
     if (isInConfig('timePrinter', args)) {
         document.getElementById("timePrinter").style.display = ''
         document.getElementById("timePrinter").innerHTML = moment.utc().format('YYYY-MM-DD HH:mm:ss');

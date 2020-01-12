@@ -14,6 +14,8 @@
     css: args.css,
     
     mainWindow: win,
+
+    sheetSize:'A3',
     
     config: ['timePrinter', 'hiddenWindow']
     
