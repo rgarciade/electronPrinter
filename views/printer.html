@@ -15,9 +15,6 @@
     <!-- Set page size here: A5, A4 or A3 -->
     <!-- Set also "landscape" if you need -->
     <style>
-        @page {
-            size: A3 landscape
-        }
     </style>
 </head>
 
@@ -27,7 +24,7 @@
 <body class="A4">
     <div id='printerMenu' class='no-print'>
         <ul class="nav">
-            <li><a onclick="print()">Imprimir</a></li>
+            <li><a onclick="printClick()">Imprimir</a></li>
             <li><a>Tipo De Hoja</a>
                 <ul>
                     <li><a onclick="changePageType('A3')">A3</a></li>
@@ -82,7 +79,7 @@
     }
 
     const {
-        print
+        printClick
     } = require(`${__dirname}/../printer.js`)
     const {
         webFrame

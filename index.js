@@ -28,7 +28,7 @@ const createPrintWindow = (args) => {
     
     printWindow.setMenu(null);
     printWindow.webContents.once('dom-ready', () => {
-        //printWindow.webContents.openDevTools();
+        printWindow.webContents.openDevTools();
         printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, sheetSize:args.sheetSize, config: args.config });
 
         if (!hidden && !thermalprinter) {
@@ -36,7 +36,14 @@ const createPrintWindow = (args) => {
         }
     })
     ipcMain.on('print-init', async (event, args) => {
-        print(printWindow, args.close)
+        if(!printWindow.isVisible()){
+            print(printWindow, args.close)
+        }
+    })
+    ipcMain.on('print-init-click', async (event, args) => {
+        if(printWindow.isVisible()){
+            print(printWindow, args.close)
+        }
     })
     
     if(thermalprinter){

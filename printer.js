@@ -56,10 +56,13 @@ const addCStylesUrl = (stylesUrl) => {
     document.getElementsByTagName("HEAD")[0].appendChild(cssLink)
 
 }
-
-
 function print(close) {
     ipcRenderer.send('print-init', { close })
 }
 
-module.exports = { transformScale, print }
+function printClick(close) {
+    ipcRenderer.send('print-init-click', { close })
+}
+
+
+module.exports = { transformScale, print , printClick}
