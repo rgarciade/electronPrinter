@@ -14,11 +14,20 @@ td,
 th,
 tr,
 table {
-    border-top: 1px solid black;
+   
     border-collapse: collapse;
     width: 300px;
 }
-
+.separator-top{
+    border-top: 1px solid black;
+}
+.separator-bot{
+    border-bottom: 1px solid black;
+}
+.bot_group_pading{
+    padding-left: 16px;
+    padding-top: 6px;
+}
 td.producto,
 th.producto {
     width: 104px;
@@ -38,8 +47,18 @@ th.precio {
     width: 40px;
     max-width: 40px;
     word-break: break-all;
+    vertical-align: bottom;
 }
-
+.total_group_top{
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-bottom: 0px !important;  
+}
+.total_group_bot{
+    border-top: 0px !important;  
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+}
 .centrado {
     text-align: center;
     align-content: center;

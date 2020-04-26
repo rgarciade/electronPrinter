@@ -28,7 +28,7 @@ const createPrintWindow = (args) => {
     
     printWindow.setMenu(null);
     printWindow.webContents.once('dom-ready', () => {
-        printWindow.webContents.openDevTools();
+        //printWindow.webContents.openDevTools();
         printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, sheetSize:args.sheetSize, config: args.config });
 
         if (!hidden && !thermalprinter) {
@@ -123,7 +123,7 @@ const createTicket = (args) =>{
                     </tr>
                 </thead>
                 <tbody>
-                    ${createProducts(args.articles)}
+                    ${createProducts(args.articles, args.iva, args.delivered)}
                 </tbody>
             </table>
             <p class="centrado" style="">
@@ -133,8 +133,11 @@ const createTicket = (args) =>{
         </div> `
     return ticket
 }
-const createProducts = (products) =>{
-
+const calcBasePrice = (price,vat) => {
+    return (price / ((vat / 100) + 1)).toFixed(2)
+}
+const createProducts = (products, iva, delivered) =>{
+    delivered = parseFloat(delivered)
     let productsHtml = ''
     let totalPrice = 0
     if(products){
@@ -142,7 +145,7 @@ const createProducts = (products) =>{
             const element = products[index];
             totalPrice += element.price * element.quantity
             productsHtml += `
-                <tr>
+                <tr class="separator-top">
                     <td class="cantidad">${element.quantity}</td>
                     <td class="producto">${element.product}</td>
                     <td class="precio">${element.price}</td>
@@ -152,13 +155,38 @@ const createProducts = (products) =>{
         }
     }
 
-    productsHtml += `
-        <tr>
-            <td class="cantidad"></td>
-            <td class="producto">TOTAL</td>
-            <td class="precio"></td>
-            <td class="precio">${totalPrice}€</td>
+    if(iva){
+        const basePrice = parseFloat(calcBasePrice(totalPrice,iva))
+        const totalIva = totalPrice - basePrice
+        productsHtml += `
+            <tr class="separator-top  total_group_top">
+                <td class="bot_group_pading" colspan="4">IMPORTE: ${basePrice.toFixed(2)}</td>
+            </tr>
+            <tr class=" total_group_top">
+            <td class="bot_group_pading" colspan="4">IVA: ${totalIva.toFixed(2)}</td>
+            </tr>
+            <tr class="total_group_bot ">
+                <td class="bot_group_pading" colspan="4">TOTAL: ${totalPrice.toFixed(2)}</td>
+            </tr>`
+    }else{
+        productsHtml += `
+        <tr class="total_group_bot ">
+            <td class="bot_group_pading" colspan="4">TOTAL: ${totalPrice.toFixed(2)}</td>
         </tr>`
+    }
+    if( delivered && delivered > 0 ){
+        productsHtml += `
+        <tr class="total_group_bot ">
+            <td class="bot_group_pading" colspan="4" >Entregado: ${delivered.toFixed(2)}</td>
+        </tr>
+        <tr class="total_group_bot ">
+            <td class="bot_group_pading" colspan="4">Cambio: ${(delivered - totalPrice).toFixed(2)}</td>
+        </tr>`
+    }
+    productsHtml += `
+    <tr>
+        <td class="separator-top" colspan="4"></td>
+    </tr>`
     return productsHtml
 }
 module.exports = { createPrintWindow, createTicket }
