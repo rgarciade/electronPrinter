@@ -58,8 +58,10 @@
 
 ## config params
 
-- timePrinter: agregar hora a la impresión
-- hiddenWindow: no mostrar vista previa de la impresión
+- timePrinter: add time to print
+- hiddenWindow: do not show print preview
+- pdf: print as pdf in the printer folder of my documents "can add name param to de principal json"
+- finishFunction : function that launches after printing the pdf
 - thermalprinter : the objetive printer is thermalprinter
   
 ## mandatory parameters

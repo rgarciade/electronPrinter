@@ -24,14 +24,13 @@ ipcRenderer.on('chargeHtml', (event, args) => {
     }else{
         localStorage.setItem('PageType', 'A4');
     }
-    
+
     if (isInConfig('timePrinter', args)) {
         document.getElementById("timePrinter").style.display = ''
         document.getElementById("timePrinter").innerHTML = moment.utc().format('YYYY-MM-DD HH:mm:ss');
     }
-
     if (isInConfig('hiddenWindow', args) || isInConfig('thermalprinter', args)) {
-        setTimeout(function(){ print(true) }, 1000);
+        setTimeout(function(){ print( args,true ) }, 1000);
     }
 
 })
@@ -56,8 +55,9 @@ const addCStylesUrl = (stylesUrl) => {
     document.getElementsByTagName("HEAD")[0].appendChild(cssLink)
 
 }
-function print(close) {
-    ipcRenderer.send('print-init', { close })
+function print(args,close) {
+	args.close = close
+    ipcRenderer.send('print-init', args )
 }
 
 function printClick(close) {

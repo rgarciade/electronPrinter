@@ -1,8 +1,11 @@
-const { BrowserWindow, ipcMain, Menu } = require('electron')
+const { BrowserWindow, ipcMain, app} = require('electron')
 const { isInConfig } = require('./common')
-
+const fs = require('fs')
+const dirSave = 'printer'
+let finishFunction = false
 const createPrintWindow = (args) => {
     if(!args.config) args.config = []
+	finishFunction = (args.finishFunction != undefined) ? args.finishFunction : false
     const hidden = isInConfig('hiddenWindow', args)
     const thermalprinter = isInConfig('thermalprinter', args)
 
@@ -25,11 +28,11 @@ const createPrintWindow = (args) => {
     printWindow.on('closed', () => {
         printWindow = null
     })
-    
+
     printWindow.setMenu(null);
     printWindow.webContents.once('dom-ready', () => {
         //printWindow.webContents.openDevTools();
-        printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, sheetSize:args.sheetSize, config: args.config });
+        printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, sheetSize:args.sheetSize, config: args.config, name:args.name });
 
         if (!hidden && !thermalprinter) {
             printWindow.show()
@@ -37,30 +40,34 @@ const createPrintWindow = (args) => {
     })
     ipcMain.on('print-init', async (event, args) => {
         if(!printWindow.isVisible()){
-            print(printWindow, args.close)
+            print(printWindow, args)
         }
     })
     ipcMain.on('print-init-click', async (event, args) => {
         if(printWindow.isVisible()){
-            print(printWindow, args.close)
+            print(printWindow, args)
         }
     })
-    
+
     if(thermalprinter){
         printWindow.loadFile(`${__dirname}/views/thermalPrinter.html`)
     }else{
-        printWindow.loadFile(`${__dirname}/views/printer.html`) 
+        printWindow.loadFile(`${__dirname}/views/printer.html`)
     }
-    
+
     printWindow.on('closed', () => {
         printWindow = null
     })
 
 }
 
-function print(printWindow, close) {
+function print(printWindow, args ) {
+	const close = (args.close)? args.close : false
+	const pdf = (isInConfig('pdf', args))? true : false
+	const pdfName = (args.name)? args.name : "tmp.pdf"
     let printers = printWindow.webContents.getPrinters()
-    let deviceName = ''
+	let deviceName = ''
+
     for (let index = 0; index < printers.length; index++) {
         const element = printers[index];
         if(element.name.includes('tickets')){
@@ -69,14 +76,36 @@ function print(printWindow, close) {
         }
     }
     const options = { silent: false, printBackground: false }
-    if(deviceName != '') options.deviceName = deviceName
-    printWindow.webContents.print(options, (success, errorType) => {
-      if (!success) console.log(errorType)
-      if (close) printWindow.close()
-    })
+	if(deviceName != '') options.deviceName = deviceName
+	if(pdf){
+		const options = { printBackground: false }
+		printWindow.webContents.printToPDF(options, async ( error, data) => {
+			const dir = app.getPath('documents')+'/'+dirSave
+			const pdfPath = dir +'/'+ pdfName +'.pdf'
+			if (!data) console.log(error)
+			if (!fs.existsSync(dir)){
+				await  fs.mkdirSync(dir);
+			}
+			fs.writeFile(pdfPath, data, function (error) {
+				if (error) {
+				  throw error
+				}
+                if(finishFunction) finishFunction()
+			  })
+			if (close) printWindow.close()
+		})
+
+	}else{
+		const options = { silent: false, printBackground: false }
+		printWindow.webContents.print(options, async (success, errorType) => {
+		  if (!success) console.log(errorType)
+          if(finishFunction) finishFunction()
+		  if (close) printWindow.close()
+		})
+	}
 }
 /**
- * 
+ *
  * @param {
  *  imgUrl,
  *  initial,
@@ -86,7 +115,7 @@ function print(printWindow, close) {
  *      'product'
  *      'price'
  *  ]',
- * } principalTitle 
+ * } principalTitle
  */
 const createTicket = (args) =>{
     let ticket = ''
