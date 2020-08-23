@@ -8,6 +8,7 @@
   "bugs": {
     "url": "https://github.com/rgarciade/electronsimpleprinter/issues"
   },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "dependencies": {
     "moment": "^2.24.0"
   },
