@@ -129,7 +129,8 @@ const createTicket = (args) =>{
         for (let index = 0; index < args.initial.length; index++) {
             const element = args.initial[index];
             initalTexts += `<br>${element}`
-        }
+		}
+		initalTexts += "</br></br>"
     }
     if(args.final){
         for (let index = 0; index < args.final.length; index++) {
@@ -189,13 +190,16 @@ const createProducts = (products, iva, delivered) =>{
         const totalIva = totalPrice - basePrice
         productsHtml += `
             <tr class="separator-top  total_group_top">
-                <td class="bot_group_pading" colspan="4">IMPORTE: ${basePrice.toFixed(2)}</td>
+				<td class="bot_group_pading" colspan="2">IMPORTE:</td>
+				<td class="bot_group_pading" colspan="2">${basePrice.toFixed(2)}</td>
             </tr>
             <tr class=" total_group_top">
-            <td class="bot_group_pading" colspan="4">IVA: ${totalIva.toFixed(2)}</td>
-            </tr>
+				<td class="bot_group_pading" colspan="2">IVA:</td>
+				<td class="bot_group_pading" colspan="2">${totalIva.toFixed(2)}</td>
+			</tr>
             <tr class="total_group_bot ">
-                <td class="bot_group_pading" colspan="4">TOTAL: ${totalPrice.toFixed(2)}</td>
+				<td class="double_bot_group_pading" colspan="2">TOTAL:</td>
+				<td class="double_bot_group_pading" colspan="2">${totalPrice.toFixed(2)}</td>
             </tr>`
     }else{
         productsHtml += `
