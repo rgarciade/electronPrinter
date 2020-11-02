@@ -21,6 +21,7 @@
     
     })
 ## thermalprinter Use
+    if you use config 'thermalprint', It will look for a printer whose name includes 'tickets', if it finds it it will print silently, if not, it will remove the printing menu
     const { createPrintWindow } =  require('simple-electron-printer-and-thermalprinter') 
 
     createPrintWindow({

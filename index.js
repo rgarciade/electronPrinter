@@ -29,7 +29,8 @@ const createPrintWindow = (args) => {
         printWindow = null
     })
 
-    printWindow.setMenu(null);
+	printWindow.setMenu(null)
+	printWindow.args = args
     printWindow.webContents.once('dom-ready', () => {
         //printWindow.webContents.openDevTools();
         printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, sheetSize:args.sheetSize, config: args.config, name:args.name });
@@ -47,8 +48,7 @@ const createPrintWindow = (args) => {
         if(printWindow.isVisible()){
             print(printWindow, args)
         }
-    })
-
+	})
     if(thermalprinter){
         printWindow.loadFile(`${__dirname}/views/thermalPrinter.html`)
     }else{
@@ -63,20 +63,22 @@ const createPrintWindow = (args) => {
 
 function print(printWindow, args ) {
 	const close = (args.close)? args.close : false
-	const pdf = (isInConfig('pdf', args))? true : false
+	const pdf = (args.config && isInConfig('pdf', args))? true : false
 	const pdfName = (args.name)? args.name : "tmp.pdf"
     let printers = printWindow.webContents.getPrinters()
-	let deviceName = ''
 
-    for (let index = 0; index < printers.length; index++) {
-        const element = printers[index];
-        if(element.name.includes('tickets')){
-            index = printers.length
-            deviceName = element.name
-        }
-    }
-    const options = { silent: false, printBackground: false }
-	if(deviceName != '') options.deviceName = deviceName
+	const options = { silent: false,  printBackground: false  }
+	if(isInConfig('thermalprinter', args)){
+		for (let index = 0; index < printers.length; index++) {
+			const element = printers[index];
+			if(element.name.includes('tickets')){
+				options.silent = true
+				options.printBackground = true
+				options.deviceName = element.name
+			}
+		}
+	}
+
 	if(pdf){
 		const options = { printBackground: false }
 		printWindow.webContents.printToPDF(options, async ( error, data) => {
@@ -97,11 +99,16 @@ function print(printWindow, args ) {
 
 	}else{
 		const options = { silent: false, printBackground: false }
-		printWindow.webContents.print(options, async (success, errorType) => {
-		  if (!success) console.log(errorType)
-          if(finishFunction) finishFunction()
-		  if (close) printWindow.close()
-		})
+		try {
+			printWindow.webContents.print(options, async (success, errorType) => {
+			  if (!success) console.log(errorType)
+			  if(finishFunction) finishFunction()
+			  if (close) printWindow.close()
+			})
+
+		} catch (error) {
+			console.log(error)
+		}
 	}
 }
 /**
@@ -129,8 +136,7 @@ const createTicket = (args) =>{
         for (let index = 0; index < args.initial.length; index++) {
             const element = args.initial[index];
             initalTexts += `<br>${element}`
-		}
-		initalTexts += "</br></br>"
+        }
     }
     if(args.final){
         for (let index = 0; index < args.final.length; index++) {
@@ -190,16 +196,13 @@ const createProducts = (products, iva, delivered) =>{
         const totalIva = totalPrice - basePrice
         productsHtml += `
             <tr class="separator-top  total_group_top">
-				<td class="bot_group_pading" colspan="2">IMPORTE:</td>
-				<td class="bot_group_pading" colspan="2">${basePrice.toFixed(2)}</td>
+                <td class="bot_group_pading" colspan="4">IMPORTE: ${basePrice.toFixed(2)}</td>
             </tr>
             <tr class=" total_group_top">
-				<td class="bot_group_pading" colspan="2">IVA:</td>
-				<td class="bot_group_pading" colspan="2">${totalIva.toFixed(2)}</td>
-			</tr>
+            <td class="bot_group_pading" colspan="4">IVA: ${totalIva.toFixed(2)}</td>
+            </tr>
             <tr class="total_group_bot ">
-				<td class="double_bot_group_pading" colspan="2">TOTAL:</td>
-				<td class="double_bot_group_pading" colspan="2">${totalPrice.toFixed(2)}</td>
+                <td class="bot_group_pading" colspan="4">TOTAL: ${totalPrice.toFixed(2)}</td>
             </tr>`
     }else{
         productsHtml += `
