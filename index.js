@@ -32,7 +32,7 @@ const createPrintWindow = (args) => {
 	printWindow.setMenu(null)
 	printWindow.args = args
     printWindow.webContents.once('dom-ready', () => {
-        //printWindow.webContents.openDevTools();
+        printWindow.webContents.openDevTools();
         printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, sheetSize:args.sheetSize, config: args.config, name:args.name });
 
         if (!hidden && !thermalprinter) {
@@ -68,7 +68,7 @@ function print(printWindow, args ) {
     let printers = printWindow.webContents.getPrinters()
 
 	const options = { silent: false,  printBackground: false  }
-	if(isInConfig('thermalprinter', args)){
+	if(isInConfig('thermalprinter', printWindow.args)){
 		for (let index = 0; index < printers.length; index++) {
 			const element = printers[index];
 			if(element.name.includes('tickets')){
@@ -98,7 +98,6 @@ function print(printWindow, args ) {
 		})
 
 	}else{
-		const options = { silent: false, printBackground: false }
 		try {
 			printWindow.webContents.print(options, async (success, errorType) => {
 			  if (!success) console.log(errorType)
