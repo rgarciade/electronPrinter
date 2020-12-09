@@ -16,6 +16,7 @@
     mainWindow: win,
 
     sheetSize:'A3',
+    printerName: 'epson'
     
     config: ['timePrinter', 'hiddenWindow']
     
@@ -53,6 +54,7 @@
                 'imgUrl': 'imgurl'
             }
         ),
+        printerName:'epson',
         config: ['thermalprinter']
         
     })

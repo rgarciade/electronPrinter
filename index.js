@@ -64,11 +64,12 @@ const createPrintWindow = (args) => {
 function print(printWindow, args ) {
 	const close = (args.close)? args.close : false
 	const pdf = (args.config && isInConfig('pdf', args))? true : false
-	const pdfName = (args.name)? args.name : "tmp.pdf"
+	const pdfName = (printWindow.args.name)? printWindow.args.name : "tmp.pdf"
+	const printerName = (printWindow.args.printerName)? printWindow.args.printerName : ''
     let printers = printWindow.webContents.getPrinters()
 
 	const options = { silent: false,  printBackground: false  }
-	if(isInConfig('thermalprinter', printWindow.args)){
+	if( printerName && printerName != '' && isInConfig('thermalprinter', printWindow.args)){
 		for (let index = 0; index < printers.length; index++) {
 			const element = printers[index];
 			if(element.name.includes('tickets')){
@@ -79,8 +80,19 @@ function print(printWindow, args ) {
 		}
 	}
 
+	if(printerName && printerName != ''){
+		options.silent = true
+		options.printBackground = true
+		options.deviceName = printerName
+	}
+
 	if(pdf){
 		const options = { printBackground: false }
+		if(printerName && printerName != ''){
+			options.silent = true
+			options.printBackground = true
+			options.deviceName = printerName
+		}
 		printWindow.webContents.printToPDF(options, async ( error, data) => {
 			const dir = app.getPath('documents')+'/'+dirSave
 			const pdfPath = dir +'/'+ pdfName +'.pdf'
