@@ -3,6 +3,7 @@ const { isInConfig } = require('./common')
 const fs = require('fs')
 const dirSave = 'printer'
 let finishFunction = false
+const isDevMode = process.execPath.match(/[\\/]electron/);
 const createPrintWindow = (args) => {
     if(!args.config) args.config = []
 	finishFunction = (args.finishFunction != undefined) ? args.finishFunction : false
@@ -32,23 +33,27 @@ const createPrintWindow = (args) => {
 	printWindow.setMenu(null)
 	printWindow.args = args
     printWindow.webContents.once('dom-ready', () => {
-        printWindow.webContents.openDevTools();
+		if (isDevMode) {
+			printWindow.webContents.openDevTools();
+		}
+		ipcMain.on('print-init', async (event, args) => {
+			if(!printWindow.isVisible()){
+				print(printWindow, args)
+			}
+		})
+		ipcMain.on('print-init-click', async (event, args) => {
+			if(printWindow.isVisible()){
+				print(printWindow, args)
+			}
+		})
+
         printWindow.webContents.send('chargeHtml', { html: args.html, css: args.css, cssUrl: args.cssUrl, sheetSize:args.sheetSize, config: args.config, name:args.name });
 
         if (!hidden && !thermalprinter) {
             printWindow.show()
-        }
+		}
+
     })
-    ipcMain.on('print-init', async (event, args) => {
-        if(!printWindow.isVisible()){
-            print(printWindow, args)
-        }
-    })
-    ipcMain.on('print-init-click', async (event, args) => {
-        if(printWindow.isVisible()){
-            print(printWindow, args)
-        }
-	})
     if(thermalprinter){
         printWindow.loadFile(`${__dirname}/views/thermalPrinter.html`)
     }else{
